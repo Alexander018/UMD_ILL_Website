@@ -32,8 +32,8 @@
  - `PhotoArticleAuthor`: Author of the article or chapter.
  - `PhotoJournalYear`: Publication year of the journal.
  
-##Functions 
-###SwitchLoanToChapter()
+## Functions 
+### SwitchLoanToChapter()
 -Changes form type to `GenericRequestArticle` with "Article" request type.
 
 - Sets document type to `Book Chapter`.
@@ -42,7 +42,7 @@
 
 - Displays `chapter` fields, hides `loan` and `ebook`.
 
-###SwitchChapterToLoan()
+### SwitchChapterToLoan()
 - Resets form type to `GenericRequestLoan` with `Loan` type.
 - Sets document type to `Book`.
 
@@ -50,35 +50,35 @@
 
 - Displays **loan** hides **chapter** and **ebook**.
 
-###SwitchLoanToEBook()
+### SwitchLoanToEBook()
 - Sets form type to `GenericRequestArticle`, type to `Article`, and document type to `EBook`.
 - Transfers loan field values to EBook.
 - Prefills `PhotoArticleTitle` with **[Patron requesting EBook]**.
 - Displays **ebook**, hides **loan** and **chapter**.
 
-###SwitchEBookToLoan()
+### SwitchEBookToLoan()
 - Resets the form to a book loan request
 - Sets type to `Loan` and document type to `Book`.
 - Transfers **EBook** field values to **Loan** fields.
 - Displays **Loan**, hides **Chapter** and **EBook**.
 
-###SwitchChapterToEBook()
+### SwitchChapterToEBook()
 - Converts chapter fields to eBook fields.
 - Displays `ebook`, hides `chapter` and `loan`.
 
-###SwitchEBookToChapter()
+### SwitchEBookToChapter()
 - Converts Ebook fields to chapter fields.
 - Displays `chapter`, hides `loan` and `ebook`.
 
-##Example UI Flow
-###Patron Path:
+## Example UI Flow
+### Patron Path:
 1. Patron clicks **Request Item through Interlibrary Loan** from **WorldCat Discovery** or **Primo website**
 2. They land on the **Loan Request form**.
 3. They realize they want a chapter, so they click **Switch to Chapter Request.**
 4. Without losing entered data, the form becomes a Chapter Request.
 5. Later, they switch to eBook and all relevant fields auto-update and changes article title to "[Patron requesting EBook]"
 
-##Tests
+## Tests
 This script has been tested manually through UMD’s ILLiad Website interface. To test it locally, ensure that your HTML elements match the expected id/class attributes and simulate switching using the toggle buttons.
 Manual validation of this feature involves:
 
