@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>ILL | Loan Request</title>
+<#INCLUDE filename="includes/responsive_head.html">
+<link rel="stylesheet" type="text/css" href="styles/datepicker.css?v=1.0.0">	
+<script type="text/javascript" language="javascript" src="js/datepicker.js?v=1.0.0"></script>
+<script type="text/javascript" src="js/ItemFormatMapping.js?v=1.0.1"></script>
+<script type="text/javascript" src="js/LoanToChapter.js?v=1.0.2"></script>
+<script language="javascript" src="js/pickupLocationChecker.js?v=1.0.0" ></script>
+
+</head>
+<script>
+function onNotWantedAfterChange() {
+  var datevalue = new Date(document.getElementById("NotWantedAfter").value);
+  // The number here is 5 days, represented in milliseconds (5*1000*60*60*24)
+  if ((datevalue - Date.now()) <432000000 ) {
+    document.getElementById("date_summary").open = true;
+  } else {
+    document.getElementById("date_summary").open = false;
+  }
+}
+
+function runWhenLoading() {
+	getLoanFormatFromUrl();
+	checkTransactionEligibility();
+}
+</script>
+</head>
+
+<body onload="runWhenLoading()">
+<#INCLUDE filename="includes/responsive_header.html">
+<#INCLUDE filename="includes/include_menu_you_are_logged_in_as.html">
+
+<div role="main">
+
+<h1 id="formheading">Borrow a Book or Other Item</h1>
+<div class="status-box"><#STATUS></div>
+
+	
+<form action="illiad.dll" method="post" name="GenericRequestLoan" id="loanform">
+	<input type="hidden" name="ILLiadForm" id="ILLiadForm" value="GenericRequestLoan" />
+	<input type="hidden" name="Username" value="<#PARAM name="Username">" />
+	<input type="hidden" name="SessionID" value="<#PARAM name="SessionID">" />
+	<input type="hidden" name="RequestType"  id="RequestType" value="Loan" />
+	<input type="hidden" name="CallNumber"  id="CallNumber" value="<#PARAM name="CallNumber">">
+	<input type="hidden" name="LendingString" id="LendingString" value="<#PARAM name="LendingString">">
+	<input type="hidden" name="DocumentType" id="DocumentType" value="Book">
+	<input type="hidden" id="defaultPickupLocation" value="<#PARAM name="NVTGC">">
+	<input type="hidden" name="Zip" id="Zip" value="<#USER field="Zip">">
+	<input TYPE="hidden" id="StatusGroup" name="StatusGroup" value="<#USER field="status">">
+	<input TYPE="hidden" id="Department" name="Department" value="<#USER field="Department">">
+
+	<!-- Disclaimer note while we are not fully operational. This Death Star is still under construction.
+-->
+<!-- 	
+	<h3>Please note that projected shipping times are still irregular. While many things are arriving in around 10 business days, some things may still take up to 8 weeks.</h3>
+	 -->
+
+	
+<div class="no-height-50-percent">
+<fieldset id="item_info">
+	<legend role="heading" aria-level="2">Item Information</legend>
+	
+	<button id="switchbutton" type="button" onclick="SwitchLoanToChapter()">Switch to Chapter Request</button>
+	<button id="switchbutton2" type="button" onclick="SwitchLoanToEBook()">Switch to EBook Request</button>
+	
+	<div class="loan field_name">Title:</div>
+	<div class="loan field"><input id="LoanTitle" name="LoanTitle" title="Title" type="text" size="55" class="f-name" tabindex="1" value="<#PARAM name="LoanTitle">"></div>
+	
+	<div class="loan field_name">Author:</div>
+	<div class="loan field"><input id="LoanAuthor" name="LoanAuthor" title="Author" type="text" size="55" class="f-name" tabindex="2" value="<#PARAM name="LoanAuthor">"></div>
+	
+	<!-- BOOK CHAPTER FIELDS -->
+	
+	
+	<div class="chapter field_name">Book Title:</div>
+	<div class="chapter field"><input id="PhotoJournalTitle" name="PhotoJournalTitle" title="Book Title" type="text" size="55" class="f-name" tabindex="1" value="<#PARAM name="PhotoJournalTitle">"></div>
+
+	<div class="chapter field_name">Chapter Title:</div>
+	<div class="chapter field"><input id="PhotoArticleTitle" name="PhotoArticleTitle" title="Chapter Title" type="text" size="55" class="f-name" tabindex="2" value="<#PARAM name="PhotoArticleTitle">"></div>
+	
+	<div class="chapter field_name">Author:</div>
+	<div class="chapter field"><input id="PhotoArticleAuthor" name="PhotoArticleAuthor" title="Author" type="text" size="55" class="f-name" tabindex="3" value="<#PARAM name="PhotoArticleAuthor">"></div>
+	
+	<div class="chapter field_name">Year:</div>
+	<div class="chapter field"><input id="PhotoJournalYear" name="PhotoJournalYear" title="Year" type="text" size="55" class="f-name" tabindex="4" value="<#PARAM name="PhotoJournalYear">"></div>
+	
+	<div class="chapter field_name">Pages:</div>
+	<div class="chapter field"><input id="PhotoJournalInclusivePages" name="PhotoJournalInclusivePages" title="Pages" type="text" size="55" class="f-name" tabindex="5" value="<#PARAM name="PhotoJournalInclusivePages">"></div>
+
+	<!-- END BOOK CHAPTER FIELDS -->
+
+	
+	<div class="ebook field_name">EBook Title:</div>
+	<div class="ebook field"><input id="EBookTitle" name="EBookTitle" title="EBook Title" type="text" size="55" class="f-name" tabindex="1" value="<#PARAM name="EBookTitle">"></div>
+
+	<!-- <div class="ebook field_name">Article Title:</div>
+	<div class="ebook field"><input id="EBookArticleTitle" name="EBookArticleTitle" title="Article Title" type="text" size="55" class="f-name" tabindex="2" value="[Patron requesting EBook]"></div>
+	 -->
+	<div class="ebook field_name">Author:</div>
+	<div class="ebook field"><input id="EBookAuthor" name="EBookAuthor" title="Author" type="text" size="55" class="f-name" tabindex="3" value="<#PARAM name="EBookAuthor">"></div>
+	
+	<div class="ebook field_name">Year:</div>
+	<div class="ebook field"><input id="EBookYear" name="EBookYear" title="Year" type="text" size="55" class="f-name" tabindex="4" value="<#PARAM name="EBookYear">"></div>
+	
+	
+
+	<!-- END EBOOK FIELDS -->
+	
+	<div class="loan field_name">Publisher:</div>
+	<div class="loan field"><input id="LoanPublisher" name="LoanPublisher" title="Publisher" type="text" size="55" class="f-name" tabindex="6" value="<#PARAM name="LoanPublisher">"></div>
+	
+	<div class="loan field_name">Year Published:</div>
+	<div class="loan field"><input id="LoanDate" name="LoanDate" title="Year Published" type="text" size="55" class="f-name" tabindex="7" value="<#PARAM name="LoanDate">"></div>
+	
+	<div class="loan field_name">Edition:</div>
+	<div class="loan field"><input id="LoanEdition" name="LoanEdition" title="Edition" type="text" size="55" class="f-name" tabindex="8" value="<#PARAM name="LoanEdition">"></div>
+
+	<div class="field_name">ISBN:</div>
+	<div class="field"><input id="ISSN" name="ISSN" type="text" title="ISBN" size="20" class="f-name" tabindex="9" value="<#PARAM name="ISSN">"></div>
+    
+	<div class="field_name">OCLC Number:</div>
+	<div class="field"><input id="ESPNumber" name="ESPNumber" title="OCLC Number" type="text" size="20" class="f-name" tabindex="10" value="<#PARAM name="ESPNumber">"></div>
+
+	
+</fieldset>
+</div>
+				
+<div class="no-height-50-percent">
+<fieldset id="request_info">
+	<legend role="heading" aria-level="2">Request Information</legend>					
+
+	<!--During the phased opening of the Libraries during COVID, we created a new GroupName in the Customization Manager called "WebFormCovidPickup" so that we didn't have to edit the existing, working, dropdown. As locations open up for pickup, add them to that list in the CustomDropDown table in the Manager. You don't have to add Dept Del here, just uncomment out the JS in the top of the page
+-->
+
+	<!--
+	<div class="field_name">Pickup Location:</div>
+	<summary>Please note, only the locations listed below are available as pickup locations at this time.</summary>
+	<select id="ShippingOptions" name="ShippingOptions" title="Pickup Location" size="1" class="f-name" tabindex="11">
+		<#OPTION name="custom" groupname="WebFormCovidPickup" selectedValue="<#PARAM name=NVTGC>"/>
+	</select>
+	
+-->
+
+	<div class="field_name">Pickup Location:</div>
+	<select id="ShippingOptions" name="ShippingOptions" title="Pickup Location" size="1" class="f-name" tabindex="11">
+		<#OPTION name="custom" groupname="WebFormPickupLocation" selectedValue="<#PARAM name=NVTGC>"/>
+	</select>
+
+	
+
+	
+	<div class="field_name">
+		<details id="date_summary">
+			<summary>Cancel if not filled by:<image src="images/questionmark_16px.svg" alt="More Information"/></summary>
+			<div class="detail_display">Most requests are filled in 5-10 days, but some take longer. We will cancel your request if unable to fill by this date.</div>
+	
+</details>
+	</div>
+    <div class="date-picker-field">
+      <input id="NotWantedAfter" name="NotWantedAfter" title="Date Needed By" type="text" size="10" class="f-name" tabindex="12" onchange="onNotWantedAfterChange()">
+	  <image src="images/cal.gif" alt="Select Date" onclick="displayDatePicker('NotWantedAfter', this)"/>
+    </div>
+	
+	<!--div><strong>Will you accept...</strong></div-->
+
+	
+	<div class="field_name">
+		<details>
+			<summary>Will you accept an alternate edition? <image src="images/questionmark_16px.svg" alt="What does this mean?"/></summary>
+			<div class="detail_display">Edition is determined by the ISBN, OCLC number, or the Edition fields above. If the specified edition cannot be obtained, ILL staff may borrow another edition.</div>
+		</details>
+	</div>
+	<div class="field">
+		<select id="AcceptAlternateEdition" name="AcceptAlternateEdition" title="Accept Alternate Editions?" size="1" class="f-name" tabindex="13">
+			<option selected>   </option>
+			<option>No</option>
+			<option>Yes</option>
+		</select>
+	</div>
+
+	<div class="field_name">
+		<details>
+			<summary>Will you accept <span id="AltFormatLabel">an alternate format (ie: physical vs digital)?</span> <image src="images/questionmark_16px.svg" alt="What does this mean?"/></summary>
+			<div class="detail_display">Format is determined by the ISBN or OCLC number fields above. If the specified format cannot be obtained, ILL staff may borrow another format. (i.e. if we cannot obtain an ebook, we will obtain a print book).</div>
+		</details>
+	</div>
+	<div class="field">
+		<select id="AcceptAlternateFormat" name="Ariel" title="Accept Alternate Format?" size="1" class="f-name" tabindex="14">
+			<option selected>   </option>
+			<option>No</option>
+			<option>Yes</option>
+		</select>
+	</div>
+
+	<div class="field_name">Special Instructions</div>
+	<div class="field">
+		<small class="note">If added, this request will be marked for staff review, which will slow its processing. <br />Please include essential info./instructions only (max 255 characters).</small>
+		<textarea id="Notes" name="Notes" title="Special Instructions" rows="3" cols="40" class="f-name" tabindex="15"><#PARAM name="Notes"></textarea>
+	</div>					
+
+	<div class="submit">
+		<input type="submit" name="SubmitButton" value="Submit Request" class="f-submit" tabindex="60" />
+		<input type="reset" name="ResetButton" value="Clear Form" class="f-submit" tabindex="61" onclick="window.location.reload();"/>
+		<input type="submit" name="SubmitButton" value="Cancel Request" class="f-submit" tabindex="62" />
+	</div>
+
+
+</fieldset>
+</div>
+	
+
+<div class="clear">&nbsp;</div>
+</form>	
+</div>
+
+<#INCLUDE filename="includes/responsive_footer.html">
+</body>
+</html>
