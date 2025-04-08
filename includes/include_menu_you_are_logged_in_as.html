@@ -1,0 +1,47 @@
+
+<!--div id="nav-menu" role="navigation" aria-label="Navigation Menu">
+	<span class="link-button-background">
+		<a href="<#ACTION action="10" form="10">">Main Menu</a>
+	</span>&nbsp;
+	<span class="link-button-background">
+		<a href="<#ACTION action="10" form="81">">Account Settings</a>
+	</span>&nbsp; 
+	<span class="link-button-background">
+		<a href="<#ACTION action="10" form="60">">Account History</a>
+	</span>&nbsp;
+	<span class="link-button-background">
+		<a href="<#ACTION action="10" form="73">">Account Notifications</a>
+	</span>&nbsp;
+	<span class="highlight-text-yellow-background">You are signed in as <strong><#USER field="LastName">, <#USER field="FirstName"></strong>&nbsp;
+		<a href="<#ACTION action="99">"><strong> Logout</strong></a>
+	</span>&nbsp;
+</div-->
+
+<div role="navigation" aria-label="Navigation Menu">
+	<div class="nav-menu desktop-menu">
+		<a class="link-button-background" href="<#ACTION action="10" form="10">">Main Menu</a>&nbsp;
+		<a class="link-button-background" href="<#ACTION action="10" form="81">">Account Settings</a>&nbsp;
+		<a class="link-button-background" href="<#ACTION action="10" form="60">">Account History</a>&nbsp;
+		<a class="link-button-background" href="<#ACTION action="10" form="73">">Account Notifications</a>&nbsp;
+		<span class="highlight-text-yellow-background">You are signed in as <strong><#USER field="LastName">, <#USER field="FirstName"></strong>&nbsp;
+			<a href="<#ACTION action="99">"><strong> Logout</strong></a>
+		</span>&nbsp;
+	</div>
+
+	<details class="nav-menu mobile-menu">
+		<summary >
+			<div class="bar"></div>
+			<div class="bar"></div>
+			<div class="bar" style="margin-bottom:0px"></div>
+		</summary>
+			<a class="link-button-background" href="<#ACTION action="10" form="10">">Main Menu</a>
+			<a class="link-button-background" href="<#ACTION action="10" form="81">">Account Settings</a>
+			<a class="link-button-background" href="<#ACTION action="10" form="60">">Account History</a>
+			<a class="link-button-background" href="<#ACTION action="10" form="73">">Account Notifications</a>
+			<span class="highlight-text-yellow-background">You are signed in as <strong><#USER field="LastName">, <#USER field="FirstName"></strong>
+				<a href="<#ACTION action="99">"><strong> Logout</strong></a>
+	</details>
+</div>
+
+
+<div class="clear"></div>
